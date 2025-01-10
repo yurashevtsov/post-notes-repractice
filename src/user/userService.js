@@ -7,13 +7,13 @@ async function getAllUsers() {
 
   return users;
 }
-async function getUserById(dataObj) {
+async function getUserById(id) {
   const user = await User.findOne({
-    where: { id: dataObj.id },
+    where: { id },
   });
 
   if (!user) {
-    throw new Error(`No user found with that id: ${dataObj.id}`);
+    throw new Error(`No user found with that id: ${id}`);
   }
 
   return user;
@@ -27,7 +27,7 @@ async function createUser(dataObj) {
   return newUser;
 }
 
-async function updateUserById(dataObj) {
+async function updateUser(dataObj) {
   const foundUser = await User.findOne({
     where: { id: dataObj.id },
   });
@@ -50,17 +50,15 @@ async function updateUserById(dataObj) {
   return foundUser;
 }
 
-async function deleteUserById(dataObj) {
-  const foundUser = await User.findOne({
-    where: { id: dataObj.id },
-  });
+async function deleteUserById(id) {
+  const foundUser = await getUserById(id);
 
   if (!foundUser) {
-    throw new Error(`No user found with that id: ${dataObj.id}`);
+    throw new Error(`No user found with that id: ${id}`);
   }
 
   await User.destroy({
-    where: { id: dataObj.id },
+    where: { id },
   });
 
   return null;
@@ -70,6 +68,6 @@ module.exports = {
   getAllUsers,
   createUser,
   getUserById,
-  updateUserById,
+  updateUser,
   deleteUserById,
 };

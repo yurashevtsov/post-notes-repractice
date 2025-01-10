@@ -8,11 +8,7 @@ async function getAllUsers(req, res) {
 }
 
 async function getOneUser(req, res) {
-  const options = {
-    id: req.params.id,
-  };
-
-  res.status(200).send(await userService.getUserById(options));
+  res.status(200).send(await userService.getUserById(req.params.id));
 }
 
 // TODO: figure out how to handle dublicates...
@@ -33,15 +29,11 @@ async function updateUser(req, res) {
     allowedFields: ["username", "email", "avatar"],
   };
 
-  res.status(200).send(await userService.updateUserById(options));
+  res.status(200).send(await userService.updateUser(options));
 }
 
 async function deleteUser(req, res) {
-  const options = {
-    id: req.params.id,
-  };
-
-  res.status(204).send(await userService.deleteUserById(options));
+  res.status(204).send(await userService.deleteUserById(req.params.id));
 }
 
 module.exports = {
