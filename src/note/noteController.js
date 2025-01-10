@@ -2,6 +2,8 @@
 
 const catchAsync = require("@src/utils/catchAsync.js");
 
+const noteService = require("@src/note/noteService.js");
+
 async function getAllNotes(req, res, next) {
   res.status(200).send("Hello from notes!");
 }
@@ -11,7 +13,7 @@ async function getOneNote(req, res, next) {
 }
 
 async function createNote(req, res, next) {
-  res.status(200).send("Hello from notes!");
+  res.status(201).send("Hello from notes!");
 }
 
 async function updateNote(req, res, next) {
@@ -19,7 +21,7 @@ async function updateNote(req, res, next) {
 }
 
 async function deleteNote(req, res, next) {
-  res.status(200).send("Hello from notes!");
+  res.status(204).send("Hello from notes!");
 }
 
 module.exports = {

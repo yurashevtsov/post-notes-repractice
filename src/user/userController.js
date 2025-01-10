@@ -22,7 +22,7 @@ async function createUser(req, res) {
     allowedFields: ["username", "email", "password", "avatar"],
   };
 
-  res.status(200).send(await userService.createUser(options));
+  res.status(201).send(await userService.createUser(options));
 }
 
 // we wont allow to change password here, i'm slightly concerned it does 3 queries - find user, update user, query user with updated data :D
