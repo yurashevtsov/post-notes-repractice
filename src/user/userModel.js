@@ -47,7 +47,7 @@ User.init(
     modelName: "user",
     tableName: "users",
     timestamps: true, // to enable timestamps it must be set to true
-    updatedAt: true, // I want to enable updatedAt timestamp to for JWT verification, if user was updated after JWT was issued
+    updatedAt: "updated_at", // I want to enable updatedAt timestamp to for JWT verification, if user was updated after JWT was issued
     createdAt: false,
   }
 );
