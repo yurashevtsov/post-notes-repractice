@@ -20,4 +20,8 @@ module.exports = Object.freeze({
   dbHost: process.env.DATABASE_HOST || "localhost",
   /** @type {string} */
   dbDialect: process.env.DATABASE_DIALECT || "mysql",
+  /** @type {string} */
+  jwtSecret: process.env.JWT_SECRET || "secret",
+  /** @type {string} */
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
 });
