@@ -19,6 +19,18 @@ async function getUserById(id) {
   return user;
 }
 
+async function getUserByEmailWithPassword(email) {
+  const user = await User.scope("withPassword").findOne({
+    where: { email },
+  });
+
+  if (!user) {
+    throw new Error(`Not found.`);
+  }
+
+  return user;
+}
+
 async function createUser(dataObj) {
   const newUser = await User.create(dataObj.userData, {
     fields: dataObj.allowedFields,
@@ -60,6 +72,7 @@ async function deleteUserById(id) {
 }
 
 module.exports = {
+  getUserByEmailWithPassword,
   getAllUsers,
   createUser,
   getUserById,
