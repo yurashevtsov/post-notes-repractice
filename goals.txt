@@ -1,0 +1,12 @@
+you will store credentials in some .env file
+you will use Express and Sequelize, and submit your code over some Git repository
+users can register using their email. Don't put any complex schema with mail links and what not; just mail and name will be enough
+users can login using email+password. Logging in will produce a JWT valid for authentication.
+users have email, full name, avatar, password (url of any image; we don't store it just yet)
+passwords are encrypted on the db using bcrypt
+users can change full name, avatar and password. NOT their own email
+each user can manage (create\read WITH PAGINATION; pass pagination parameters through query\update\delete) a bunch of notes
+every note will have name, color, description
+every note is related to one user
+requests other than user registration and user login are authenticated
+authentication can be performed either by a Authorization Bearer {token} or via Authorization Basic {code}; refer to the documentation as to how Basic Authentication is performed
