@@ -7,7 +7,11 @@ require("module-alias/register");
 const config = require("@config/index.js");
 const app = require("./app.js");
 
+const db = require("@src/db/database.js");
+
 // when database connected, only then listen for requests
-app.listen(config.serverPort, () => {
-  console.log(`Server is running on port ${config.serverPort}`);
+db.init().then(() => {
+  app.listen(config.serverPort, () => {
+    console.log(`Server is running on port ${config.serverPort}`);
+  });
 });
