@@ -5,7 +5,13 @@ const { DataTypes, Model } = require("sequelize");
 // model needs to be connected to a database, from my understanding, which we pass in options
 const { sequelizeInstance } = require("@src/db/database.js");
 
-class User extends Model {}
+class User extends Model {
+  // toJSON() {
+  //   const attributes = this.get();
+  //   delete attributes.password;
+  //   return attributes;
+  // }
+}
 
 User.init(
   //model properties
@@ -49,6 +55,15 @@ User.init(
     timestamps: true, // to enable timestamps it must be set to true
     updatedAt: "updated_at", // I want to enable updatedAt timestamp to for JWT verification, if user was updated after JWT was issued
     createdAt: false,
+    // by default password is hidden even if its required by another table, when I need password, another scope is defined to help with it
+    defaultScope: {
+      attributes: { exclude: ["password"] },
+    },
+    scopes: {
+      withPassword: {
+        attributes: {},
+      },
+    },
   }
 );
 
