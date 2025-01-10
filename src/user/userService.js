@@ -13,7 +13,7 @@ async function getUserById(id) {
   });
 
   if (!user) {
-    throw new Error(`No user found with that id: ${id}`);
+    throw new Error(`Not found.`);
   }
 
   return user;
@@ -34,7 +34,7 @@ async function updateUser(dataObj) {
 
   // TODO: add real error handling later
   if (!foundUser) {
-    throw new Error(`No user found with that id: ${dataObj.id}`);
+    throw new Error(`Not found.`);
   }
 
   foundUser.set(dataObj.userData);
@@ -53,13 +53,8 @@ async function updateUser(dataObj) {
 async function deleteUserById(id) {
   const foundUser = await getUserById(id);
 
-  if (!foundUser) {
-    throw new Error(`No user found with that id: ${id}`);
-  }
-
-  await User.destroy({
-    where: { id },
-  });
+  // not throwing error if not found because other function would do it
+  await foundUser.destroy();
 
   return null;
 }
