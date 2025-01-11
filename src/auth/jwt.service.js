@@ -10,7 +10,6 @@ function encodeToken(id) {
     expiresIn: config.jwtExpiresIn,
     issuer: packageJson.name,
     audience: packageJson.name,
-    clockTolerance: 3000, // +- 3 seconds
   });
 }
 
