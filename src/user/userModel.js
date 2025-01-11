@@ -4,6 +4,7 @@ const { DataTypes, Model } = require("sequelize");
 
 // model needs to be connected to a database, from my understanding, which we pass in options
 const { sequelizeInstance } = require("@src/db/database.js");
+const passwordService = require("@src/auth/passwordService.js");
 
 class User extends Model {
   // toJSON() {
@@ -67,4 +68,25 @@ User.init(
   }
 );
 
+// eslint-disable-next-line no-unused-vars
+User.addHook("beforeSave", "hashingPassword", async (instance, options) => {
+  if (instance.isNewRecord || instance.changed("password")) {
+    const hashedPassword = await passwordService.hashPassword(
+      instance.password
+    );
+    instance.password = hashedPassword;
+  }
+});
+
 module.exports = User;
+
+/* 
+  A note for the hooks: 
+  I can access properties of an instance like that or directly
+  console.log(`Datavalues username?${instance.dataValues.username}`); 
+
+  Instead o figuring how to make 2 hooks not interfering with each other, I can use this 2 properties in ONE hook instead!
+
+  instance.changed("password"); - will be true, if property was changed
+  instance.isNewRecord; - will be true, if its a newly created record
+  */
