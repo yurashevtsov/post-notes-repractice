@@ -67,7 +67,7 @@ async function updateUser(req, res) {
   const options = {
     id: req.params.id,
     userData: req.body,
-    allowedFields: ["username", "email", "avatar"],
+    allowedFields: ["username", "password", "avatar"],
   };
 
   res.status(200).send(await userService.updateUser(options));
