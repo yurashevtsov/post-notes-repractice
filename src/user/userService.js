@@ -1,6 +1,7 @@
 "use strict";
 
 const User = require("@src/user/userModel.js");
+const helpers = require("@src/utils/helpers.js");
 
 async function getAllUsers() {
   const users = await User.findAll();
@@ -19,14 +20,11 @@ async function getUserById(id) {
   return user;
 }
 
+// we dont want to leak any information about the user, no error handlers here
 async function getUserByEmailWithPassword(email) {
   const user = await User.scope("withPassword").findOne({
     where: { email },
   });
-
-  if (!user) {
-    throw new Error(`Not found.`);
-  }
 
   return user;
 }
@@ -49,15 +47,23 @@ async function updateUser(dataObj) {
     throw new Error(`Not found.`);
   }
 
-  foundUser.set(dataObj.userData);
+  // FILTERING OUT FIELDS THAT WE DONT WANT TO ADD TO A DATABASE
+  const filteredObj = helpers.filterUnwantedFields(dataObj.userData, dataObj.allowedFields);
+  console.log(filteredObj);
+
+  foundUser.set(filteredObj);
 
   await foundUser.save({
     fields: dataObj.allowedFields,
   });
 
-  // if I wont then it will show desired fields updated but it wont be in database
-  // if using validator that will throw an error if not allowed field exists, I wont need to do an extra query or delete these unwanted fields
-  await foundUser.reload();
+  /* 
+  as a reference - Instead of making my own filter, I could have limited fields like that
+
+  await foundUser.save({
+    fields: dataObj.allowedFields,
+  });
+  */
 
   return foundUser;
 }
