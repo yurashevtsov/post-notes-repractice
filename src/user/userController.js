@@ -2,7 +2,7 @@
 
 const catchAsync = require("@src/utils/catchAsync.js");
 const userService = require("./userService.js");
-const jwtService = require("@src/auth/jwt.service.js");
+const jwtService = require("@src/auth/jwtService.js");
 const passwordService = require("@src/auth/passwordService.js");
 
 async function signup(req, res) {
@@ -24,7 +24,9 @@ async function signup(req, res) {
 
 async function login(req, res, next) {
   //1. get the user details(with password)
-  const foundUser = await userService.getUserByEmailWithPassword(req.body.email);
+  const foundUser = await userService.getUserByEmailWithPassword(
+    req.body.email
+  );
 
   // 2.make sure passwords matches the password from database
   const isCorrectPassword = await passwordService.isValidPassword(
