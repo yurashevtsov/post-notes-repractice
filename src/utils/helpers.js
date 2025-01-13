@@ -8,9 +8,9 @@
 function filterUnwantedFields(unfilteredObj, allowedFields) {
   const filteredObj = {};
 
-  allowedFields.forEach((field) => {
-    if (unfilteredObj[field] !== undefined) {
-      filteredObj[field] = unfilteredObj[field];
+  Object.keys(unfilteredObj).forEach((key) => {
+    if (allowedFields.includes(key)) {
+      filteredObj[key] = unfilteredObj[key];
     }
   });
 
