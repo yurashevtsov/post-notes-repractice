@@ -6,7 +6,7 @@ const { promisify } = require("util");
 const packageJson = require("../../package.json");
 
 function encodeToken(id) {
-  return jwt.sign({ id }, config.jwtSecret, {
+  return jwt.sign({ sub: id, scope: "AUTHENTICATION" }, config.jwtSecret, {
     expiresIn: config.jwtExpiresIn,
     issuer: packageJson.name,
     audience: packageJson.name,

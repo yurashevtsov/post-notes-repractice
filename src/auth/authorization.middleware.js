@@ -26,7 +26,7 @@ async function tokenAuthHandler(req, res, next) {
   const payload = await jwtService.decodeToken(token);
 
   // 3. Make sure user still exists
-  const foundUser = await getUserById(payload.id);
+  const foundUser = await getUserById(payload.sub);
 
   if (!foundUser) {
     return next("User no longer exists. Invalid token.");
@@ -40,7 +40,12 @@ async function tokenAuthHandler(req, res, next) {
     return next("User recently changed his password. Please login again.");
   }
 
-  // 5. attach user to a request object
+  // 5. Make sure scope contains - AUTHENTICATION
+  if (!payload?.scope.includes("AUTHENTICATION")) {
+    return next("Invalid token. Incorrect scope.");
+  }
+
+  // 6. attach user to a request object
   req.user = foundUser;
 
   next();
