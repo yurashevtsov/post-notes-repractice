@@ -48,22 +48,15 @@ async function updateUser(dataObj) {
   }
 
   // FILTERING OUT FIELDS THAT WE DONT WANT TO ADD TO A DATABASE
-  const filteredObj = helpers.filterUnwantedFields(dataObj.userData, dataObj.allowedFields);
-  console.log(filteredObj);
+  const filteredObj = helpers.filterUnwantedFields(
+    dataObj.userData,
+    dataObj.allowedFields
+  );
 
   foundUser.set(filteredObj);
 
-  await foundUser.save({
-    fields: dataObj.allowedFields,
-  });
-
-  /* 
-  as a reference - Instead of making my own filter, I could have limited fields like that
-
-  await foundUser.save({
-    fields: dataObj.allowedFields,
-  });
-  */
+  // funny enough, if I have {fields: "password"} and wont provide this password field, I will get an error, LOL
+  await foundUser.save();
 
   return foundUser;
 }
