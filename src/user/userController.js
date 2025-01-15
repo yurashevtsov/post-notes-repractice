@@ -23,10 +23,15 @@ async function signup(req, res) {
 }
 
 async function login(req, res, next) {
+  console.log(req.body);
   //1. get the user details(with password)
   const foundUser = await userService.getUserByEmailWithPassword(
     req.body.email
   );
+
+  if (!foundUser) {
+    return next("Invalid credentials.");
+  }
 
   // 2.make sure passwords matches the password from database
   const isCorrectPassword = await passwordService.isValidPassword(

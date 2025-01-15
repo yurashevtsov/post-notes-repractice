@@ -33,8 +33,10 @@ async function tokenAuthHandler(req, res, next) {
   }
 
   // 4. make sure user didnt change his password after it was issued
-  const userUpdatedAt = foundUser.updated_at / 1000;
+  const userUpdatedAt = foundUser.updatedAt / 1000;
   const tokenIssuedAt = payload.iat;
+
+  console.log(userUpdatedAt, tokenIssuedAt);
 
   if (userUpdatedAt > tokenIssuedAt) {
     return next("User recently changed his password. Please login again.");

@@ -33,8 +33,8 @@ Note.init(
       modelName: "note",
       tableName: "notes",
       timestamps: true,
-      createdAt: "created_at",
-      updatedAt: "updated_at",
+      createdAt: true,
+      updatedAt: true,
     }
   );
   

@@ -7,11 +7,11 @@ const { sequelizeInstance } = require("@src/db/database.js");
 const passwordService = require("@src/auth/passwordService.js");
 
 class User extends Model {
-  // toJSON() {
-  //   const attributes = this.get();
-  //   delete attributes.password;
-  //   return attributes;
-  // }
+  toJSON() {
+    const attributes = this.get();
+    delete attributes.password;
+    return attributes;
+  }
 }
 
 User.init(
@@ -54,8 +54,8 @@ User.init(
     modelName: "user",
     tableName: "users",
     timestamps: true, // to enable timestamps it must be set to true
-    updatedAt: "updated_at", // I want to enable updatedAt timestamp to for JWT verification, if user was updated after JWT was issued
-    createdAt: false,
+    updatedAt: true, // I want to enable updatedAt timestamp to for JWT verification, if user was updated after JWT was issued
+    createdAt: true,
     // by default password is hidden even if its required by another table, when I need password, another scope is defined to help with it
     defaultScope: {
       attributes: { exclude: ["password"] },
