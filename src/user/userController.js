@@ -23,7 +23,6 @@ async function signup(req, res) {
 }
 
 async function login(req, res, next) {
-  console.log(req.body);
   //1. get the user details(with password)
   const foundUser = await userService.getUserByEmailWithPassword(
     req.body.email
@@ -69,7 +68,7 @@ async function createUser(req, res) {
   res.status(201).send(await userService.createUser(options));
 }
 
-// we wont allow to change password here, i'm slightly concerned it does 3 queries - find user, update user, query user with updated data :D
+// changing email is not allowed
 async function updateUser(req, res) {
   const options = {
     id: req.params.id,

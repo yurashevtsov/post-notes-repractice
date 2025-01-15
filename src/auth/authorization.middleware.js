@@ -25,26 +25,24 @@ async function tokenAuthHandler(req, res, next) {
   // 2.decode token
   const payload = await jwtService.decodeToken(token);
 
-  // 3. Make sure user still exists
+  // 3. Make sure scope contains - AUTHENTICATION
+  if (!payload?.scope.includes("AUTHENTICATION")) {
+    return next("Invalid token. Scope error.");
+  }
+
+  // 4. Make sure user still exists
   const foundUser = await getUserById(payload.sub);
 
   if (!foundUser) {
     return next("User no longer exists. Invalid token.");
   }
 
-  // 4. make sure user didnt change his password after it was issued
-  const userUpdatedAt = foundUser.updatedAt / 1000;
-  const tokenIssuedAt = payload.iat;
-
-  console.log(userUpdatedAt, tokenIssuedAt);
-
-  if (userUpdatedAt > tokenIssuedAt) {
-    return next("User recently changed his password. Please login again.");
-  }
-
-  // 5. Make sure scope contains - AUTHENTICATION
-  if (!payload?.scope.includes("AUTHENTICATION")) {
-    return next("Invalid token. Incorrect scope.");
+  // 5. make sure user didnt change his password after token was issued
+  if (foundUser.changedPasswordAt) {
+    jwtService.userChangedPasswordAfter(
+      foundUser.changedPasswordAt,
+      payload.iat
+    );
   }
 
   // 6. attach user to a request object

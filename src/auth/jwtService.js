@@ -18,9 +18,22 @@ async function decodeToken(token) {
   return await promisify(jwt.verify)(token, config.jwtSecret);
 }
 
+/**
+ * Compares two numbers, because JWT uses seconds, not milliseconds after date conversion, it will convert first date to seconds and compare them.
+ * @param {Date} userChangedPasswordAt normal date object/date in milliseconds
+ * @param {number} tokenIssuedAt number, representing date in seconds
+ * @throws {Error} if user recently changed his password. Otherwise nothing happens
+ */
+function userChangedPasswordAfter(userChangedPasswordAt, tokenIssuedAt) {
+  if (userChangedPasswordAt && userChangedPasswordAt / 1000 > tokenIssuedAt) {
+    throw new Error("User recently changed his password. Please login again.");
+  }
+}
+
 module.exports = {
   encodeToken,
   decodeToken,
+  userChangedPasswordAfter,
 };
 
 // Signing a token with 1 hour of expiration:
