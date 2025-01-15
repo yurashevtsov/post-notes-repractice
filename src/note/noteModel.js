@@ -8,34 +8,34 @@ const { sequelizeInstance } = require("@src/db/database.js");
 class Note extends Model {}
 
 Note.init(
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-        allowNull: false,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      color: {
-        type: DataTypes.STRING,
-        defaultValue: "yellow",
-      },
-      description: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
     },
-    {
-      sequelize: sequelizeInstance,
-      modelName: "note",
-      tableName: "notes",
-      timestamps: true,
-      createdAt: true,
-      updatedAt: true,
-    }
-  );
-  
-  module.exports = Note;
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    color: {
+      type: DataTypes.STRING,
+      defaultValue: "yellow",
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize: sequelizeInstance,
+    modelName: "note",
+    tableName: "notes",
+    timestamps: true,
+    createdAt: true,
+    updatedAt: true,
+  }
+);
+
+module.exports = Note;

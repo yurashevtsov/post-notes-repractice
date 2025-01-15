@@ -2,6 +2,7 @@
 
 // module for easy aliases
 require("module-alias/register");
+require("@src/db/associations.js");
 
 // config must be required first for everything below to access it
 const config = require("@config/index.js");
