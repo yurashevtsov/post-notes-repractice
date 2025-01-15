@@ -3,10 +3,10 @@
 const routerInstance = require("express").Router();
 const noteController = require("./noteController.js");
 
-routerInstance.get("/", noteController.getAllNotes);
-routerInstance.get("/:id", noteController.getOneNote);
-routerInstance.post("/", noteController.createNote);
-routerInstance.put("/:id", noteController.updateNote);
-routerInstance.delete("/:id", noteController.deleteNote);
+routerInstance.get("/", noteController.getAllUserNotes);
+routerInstance.get("/:id", noteController.getUserNote);
+routerInstance.post("/", noteController.createUserNote);
+routerInstance.put("/:id", noteController.updateUserNote);
+routerInstance.delete("/:id", noteController.deleteUserNote);
 
 module.exports = routerInstance;
