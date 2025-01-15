@@ -5,7 +5,7 @@
  * @param {array} allowedFields
  * @returns {object}
  */
-function filterUnwantedFields(unfilteredObj, allowedFields) {
+function keepAllowedFields(unfilteredObj, allowedFields) {
   const filteredObj = {};
 
   Object.keys(unfilteredObj).forEach((key) => {
@@ -16,7 +16,22 @@ function filterUnwantedFields(unfilteredObj, allowedFields) {
 
   return filteredObj;
 }
+/**
+ * @param {Object} unfilteredObj object to delete fields from
+ * @param {Array} fields array of fields to be removed 
+ * @returns {Object}
+ */
+function removeFieldsFromObj(unfilteredObj, fields) {
+  let filtered = { ...unfilteredObj };
+
+  fields.forEach((field) => {
+    Reflect.deleteProperty(filtered, field);
+  });
+
+  return filtered;
+}
 
 module.exports = {
-  filterUnwantedFields,
+  keepAllowedFields,
+  removeFieldsFromObj,
 };

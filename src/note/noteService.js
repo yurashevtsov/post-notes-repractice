@@ -2,15 +2,22 @@
 
 const Note = require("@src/note/noteModel.js");
 
-async function getAllNotes() {
-  const allNotes = await Note.findAll();
+async function getAllUserNotes(userId) {
+  const allNotes = await Note.findAll({
+    where: {
+      userId: userId,
+    },
+  });
 
   return allNotes;
 }
 
-async function getNoteById(id) {
+async function getUserNote(userId, noteId) {
   const foundNote = await Note.findOne({
-    where: { id },
+    where: {
+      userId: userId,
+      id: noteId,
+    },
   });
 
   if (!foundNote) {
@@ -20,44 +27,48 @@ async function getNoteById(id) {
   return foundNote;
 }
 
-async function createNote(dataObj) {
-  const newNote = await Note.create(dataObj.userData, {
-    fields: dataObj.allowedFields,
+async function createUserNote(userId, userData) {
+  const newNote = await Note.create({
+    userId: userId,
+    ...userData,
   });
 
   return newNote;
 }
 
-async function updateNote(dataObj) {
+async function updateUserNote(userId, noteId, userData) {
   const foundNote = await Note.findOne({
-    id: dataObj.id,
+    id: noteId,
+    userId: userId,
   });
 
   if (!foundNote) {
     throw new Error(`Not found.`);
   }
 
-  foundNote.set(dataObj.userData);
+  foundNote.set(userData);
 
-  await foundNote.save({
-    fields: dataObj.allowedFields,
-  });
+  await foundNote.save();
 
   return foundNote;
 }
 
-async function deleteNoteById(id) {
-    const foundNote = await getNoteById(id);
+async function deleteUserNote(userId, noteId) {
+  const foundNote = await getUserNote(userId, noteId);
 
-    foundNote.destroy();
+  if (!foundNote) {
+    throw new Error(`Not found.`);
+  }
 
-    return null;
+  foundNote.destroy();
+
+  return null;
 }
 
 module.exports = {
-  getAllNotes,
-  getNoteById,
-  createNote,
-  updateNote,
-  deleteNoteById,
+  getAllUserNotes,
+  getUserNote,
+  createUserNote,
+  updateUserNote,
+  deleteUserNote,
 };
