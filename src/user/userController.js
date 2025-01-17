@@ -4,6 +4,7 @@ const catchAsync = require("@src/utils/catchAsync.js");
 const userService = require("./userService.js");
 const jwtService = require("@src/auth/jwtService.js");
 const passwordService = require("@src/auth/passwordService.js");
+const helpers = require("@src/utils/helpers.js");
 
 async function signup(req, res) {
   const options = {
@@ -70,13 +71,19 @@ async function createUser(req, res) {
 
 // changing email is not allowed
 async function updateUser(req, res) {
-  const options = {
-    id: req.params.id,
-    userData: req.body,
-    allowedFields: ["username", "password", "avatar"],
-  };
+  const userId = req.params.id;
+  const userData = req.body;
 
-  res.status(200).send(await userService.updateUser(options));
+  // FILTERING OUT FIELDS THAT WE DONT WANT TO ADD TO A DATABASE
+  // allowedFields: ["username", "password", "avatar"]
+  // why? I dont want other fields to be touched
+  const filteredUserData = helpers.keepAllowedFields(userData, [
+    "username",
+    "password",
+    "avatar",
+  ]);
+
+  res.status(200).send(await userService.updateUser(userId, filteredUserData));
 }
 
 async function deleteUser(req, res) {

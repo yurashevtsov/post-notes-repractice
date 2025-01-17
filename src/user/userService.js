@@ -1,7 +1,6 @@
 "use strict";
 
 const User = require("@src/user/userModel.js");
-const helpers = require("@src/utils/helpers.js");
 
 async function getAllUsers() {
   const users = await User.findAll();
@@ -47,25 +46,20 @@ async function createUser(dataObj) {
   return newUser;
 }
 
-async function updateUser(dataObj) {
+async function updateUser(userId, userData) {
   const foundUser = await User.findOne({
-    where: { id: dataObj.id },
+    where: { id: userId },
   });
+
 
   // TODO: add real error handling later
   if (!foundUser) {
     throw new Error(`Not found.`);
   }
 
-  // FILTERING OUT FIELDS THAT WE DONT WANT TO ADD TO A DATABASE
-  const filteredObj = helpers.filterUnwantedFields(
-    dataObj.userData,
-    dataObj.allowedFields
-  );
+  foundUser.set(userData);
 
-  foundUser.set(filteredObj);
-
-  // funny enough, if I have {fields: "password"} and wont provide this password field, I will get an error, LOL
+  // funny enough, if I have {fields: "password"} and wont provide this password field, I will get an error, LOL. Sadness
   await foundUser.save();
 
   return foundUser;
