@@ -26,7 +26,7 @@ async function decodeToken(token) {
  */
 function userChangedPasswordAfter(userChangedPasswordAt, tokenIssuedAt) {
   if (userChangedPasswordAt && userChangedPasswordAt / 1000 > tokenIssuedAt) {
-    throw new Error("User recently changed his password. Please login again.");
+    throw new Error("User recently has changed his password. Please login again.");
   }
 }
 

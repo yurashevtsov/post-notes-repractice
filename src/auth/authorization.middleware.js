@@ -38,12 +38,7 @@ async function tokenAuthHandler(req, res, next) {
   }
 
   // 5. make sure user didnt change his password after token was issued
-  if (foundUser.changedPasswordAt) {
-    jwtService.userChangedPasswordAfter(
-      foundUser.changedPasswordAt,
-      payload.iat
-    );
-  }
+  jwtService.userChangedPasswordAfter(foundUser.changedPasswordAt, payload.iat);
 
   // 6. attach user to a request object
   req.user = foundUser;
