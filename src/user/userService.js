@@ -8,6 +8,7 @@ async function getAllUsers() {
 
   return users;
 }
+
 async function getUserById(id) {
   const user = await User.findOne({
     where: { id },
@@ -16,6 +17,15 @@ async function getUserById(id) {
   if (!user) {
     throw new Error(`Not found.`);
   }
+
+  return user;
+}
+
+// for JWT validation, so JWT handler would throw an error
+async function getUserByIdNoError(id) {
+  const user = await User.findOne({
+    where: { id },
+  });
 
   return user;
 }
@@ -75,6 +85,7 @@ module.exports = {
   getAllUsers,
   createUser,
   getUserById,
+  getUserByIdNoError,
   updateUser,
   deleteUserById,
 };

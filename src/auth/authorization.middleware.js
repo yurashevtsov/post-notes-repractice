@@ -1,7 +1,7 @@
 "use strict";
 
 const jwtService = require("@src/auth/jwtService.js");
-const { getUserById } = require("@src/user/userService.js");
+const userService = require("@src/user/userService.js");
 const catchAsync = require("@src/utils/catchAsync.js");
 
 async function tokenAuthHandler(req, res, next) {
@@ -31,7 +31,7 @@ async function tokenAuthHandler(req, res, next) {
   }
 
   // 4. Make sure user still exists
-  const foundUser = await getUserById(payload.sub);
+  const foundUser = await userService.getUserByIdNoError(payload.sub);
 
   if (!foundUser) {
     return next("User no longer exists. Invalid token.");
