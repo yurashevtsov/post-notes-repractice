@@ -38,10 +38,8 @@ async function getUserByEmailWithPassword(email) {
   return user;
 }
 
-async function createUser(dataObj) {
-  const newUser = await User.create(dataObj.userData, {
-    fields: dataObj.allowedFields,
-  });
+async function createUser(userData) {
+  const newUser = await User.create(userData);
 
   return newUser;
 }

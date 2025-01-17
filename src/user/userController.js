@@ -7,12 +7,14 @@ const passwordService = require("@src/auth/passwordService.js");
 const helpers = require("@src/utils/helpers.js");
 
 async function signup(req, res) {
-  const options = {
-    userData: req.body,
-    allowedFields: ["username", "email", "password", "avatar"],
-  };
+  const filteredUserData = helpers.keepAllowedFields(req.body, [
+    "username",
+    "email",
+    "password",
+    "avatar",
+  ]);
 
-  const newUser = await userService.createUser(options);
+  const newUser = await userService.createUser(filteredUserData);
 
   const token = jwtService.encodeToken(newUser.id);
 
@@ -59,14 +61,15 @@ async function getOneUser(req, res) {
   res.status(200).send(await userService.getUserById(req.params.id));
 }
 
-// TODO: figure out how to handle dublicates...
 async function createUser(req, res) {
-  const options = {
-    userData: req.body,
-    allowedFields: ["username", "email", "password", "avatar"],
-  };
+  const filteredUserData = helpers.keepAllowedFields(req.body, [
+    "username",
+    "email",
+    "password",
+    "avatar",
+  ]);
 
-  res.status(201).send(await userService.createUser(options));
+  res.status(201).send(await userService.createUser(filteredUserData));
 }
 
 // changing email is not allowed
