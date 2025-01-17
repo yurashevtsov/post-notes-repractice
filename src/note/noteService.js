@@ -21,7 +21,7 @@ async function getUserNote(userId, noteId) {
   });
 
   if (!foundNote) {
-    throw new Error(`Not found.`);
+    throw new Error(`An entity you are trying to find (get) doesnt exists.`);
   }
 
   return foundNote;
@@ -43,7 +43,7 @@ async function updateUserNote(userId, noteId, userData) {
   });
 
   if (!foundNote) {
-    throw new Error(`Not found.`);
+    throw new Error(`An entity you are trying to update doesnt exists.`);
   }
 
   foundNote.set(userData);
@@ -57,7 +57,7 @@ async function deleteUserNote(userId, noteId) {
   const foundNote = await getUserNote(userId, noteId);
 
   if (!foundNote) {
-    throw new Error(`Not found.`);
+    throw new Error(`An entity you are trying to delete doesnt exists.`);
   }
 
   foundNote.destroy();

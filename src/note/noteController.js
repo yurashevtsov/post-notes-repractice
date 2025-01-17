@@ -24,8 +24,8 @@ async function createUserNote(req, res) {
   const userData = req.body;
 
   // filter user input
-  // I dont want them to modify userId or set their own id
-  // will fix it with joi later, otherwise middleware to remove these fields...
+  // I dont want them to modify userId or set their own note id
+  // will fix it with joi later
   helpers.removeFieldsFromObj(req.body, ["userId", "id"]);
 
   res.status(201).send(await noteService.createUserNote(userId, userData));
