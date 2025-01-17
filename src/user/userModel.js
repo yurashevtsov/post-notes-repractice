@@ -73,18 +73,8 @@ User.init(
 );
 
 // eslint-disable-next-line no-unused-vars
-User.addHook("beforeSave", "hashPassOnCreate", async (instance, options) => {
-  if (instance.isNewRecord) {
-    const hashedPassword = await passwordService.hashPassword(
-      instance.password
-    );
-    instance.password = hashedPassword;
-  }
-});
-
-// eslint-disable-next-line no-unused-vars
-User.addHook("beforeSave", "onPasswordChange", async (instance, options) => {
-  if (instance.changed("password")) {
+User.addHook("beforeSave", "passwordHashOnSaveOrUpdate", async (instance, options) => {
+  if (instance.isNewRecord || instance.changed("password")) {
     const hashedPassword = await passwordService.hashPassword(
       instance.password
     );
