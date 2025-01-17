@@ -33,11 +33,17 @@ async function createUserNote(req, res) {
 
 async function updateUserNote(req, res) {
   const userId = req.user.id;
-  const userData = req.body;
+  const noteId = req.params.id;
+  // removing from object userid and id fields - these
+  const filteredUserData = helpers.keepAllowedFields(req.body, [
+    "name",
+    "color",
+    "description",
+  ]);
 
-  helpers.removeFieldsFromObj(req.body, ["userId", "id"]);
-
-  res.status(200).send(await noteService.updateUserNote(userId, userData));
+  res
+    .status(200)
+    .send(await noteService.updateUserNote(userId, noteId, filteredUserData));
 }
 
 async function deleteUserNote(req, res) {

@@ -38,8 +38,10 @@ async function createUserNote(userId, userData) {
 
 async function updateUserNote(userId, noteId, userData) {
   const foundNote = await Note.findOne({
-    id: noteId,
-    userId: userId,
+    where: {
+      id: noteId,
+      userId: userId,
+    },
   });
 
   if (!foundNote) {
