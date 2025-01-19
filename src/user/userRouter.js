@@ -6,12 +6,14 @@ const authMiddleware = require("@src/auth/authorization.middleware.js");
 const joiMiddleware = require("@src/middleware/joiMiddleware.js");
 const userValidationSchema = require("@src/user/userValidationSchema.js");
 
+// SIGNUP
 routerInstance.post(
   "/signup",
   joiMiddleware.validateSchema(userValidationSchema.createUserSchema),
   userController.signup
 );
 
+// LOGIN
 routerInstance.post(
   "/login",
   joiMiddleware.validateSchema(userValidationSchema.loginSchema),
@@ -19,23 +21,29 @@ routerInstance.post(
 );
 
 // AUTHORIZATION MIDDLEWARE
-// APPLIES TO ALL ROUTES BELOW
 routerInstance.use(authMiddleware.tokenAuthHandler);
 
+// GET ALL USERS
 routerInstance.get("/", userController.getAllUsers);
 
+// GET ONE USER
 routerInstance.get("/:id", userController.getOneUser);
 
+// CREATE USER
 routerInstance.post(
   "/",
   joiMiddleware.validateSchema(userValidationSchema.createUserSchema),
   userController.createUser
 );
 
-routerInstance.put("/:id",
-	joiMiddleware.validateSchema(userValidationSchema.updateUserSchema),
-	userController.updateUser);
+// UPDATE USER
+routerInstance.put(
+  "/:id",
+  joiMiddleware.validateSchema(userValidationSchema.updateUserSchema),
+  userController.updateUser
+);
 
+// DELETE USER
 routerInstance.delete("/:id", userController.deleteUser);
 
 module.exports = routerInstance;
