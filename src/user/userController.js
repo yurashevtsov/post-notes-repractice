@@ -2,16 +2,13 @@
 
 const catchAsync = require("@src/utils/catchAsync.js");
 const userService = require("./userService.js");
-const jwtService = require("@src/auth/jwtService.js");
 
 async function signup(req, res) {
   // allowed fields: username, email, password, avatar - handled by Joi middleware
-  const newUser = await userService.createUser(req.body);
-  const token = jwtService.encodeToken(newUser.id);
+  const { user, token } = await userService.userSignup(req.body);
 
-  // could remove the user but not really necessary in my pet project
   res.status(201).send({
-    user: newUser,
+    user,
     token,
   });
 }

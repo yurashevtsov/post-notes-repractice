@@ -8,7 +8,7 @@ const jwtService = require("@src/auth/jwtService.js");
  * Authenticate user by email and password
  * @param {string} email user email
  * @param {string} candidatePassword user password
- * @returns {string} JWT
+ * @returns {Object} Object with 2 properties: user, token
  */
 async function authenticateUser(email, candidatePassword) {
   //1. get the user details(with password)
@@ -33,6 +33,20 @@ async function authenticateUser(email, candidatePassword) {
 
   return {
     user: foundUser,
+    token,
+  };
+}
+
+/** accepts user data to create a new user - username, email, password, (repeatPassword), avatar (optional)
+ * @param {Object} userData typically, user.body (validated by joi)
+ * @returns {Object} Returns object with 2 properties - user, token
+ */
+async function userSignup(userData) {
+  const newUser = await createUser(userData);
+  const token = jwtService.encodeToken(newUser.id);
+
+  return {
+    user: newUser,
     token,
   };
 }
@@ -73,6 +87,10 @@ async function getUserByEmailWithPassword(email) {
   return user;
 }
 
+/** accepts user data to create a new user - username, email, password, (repeatPassword), avatar (optional)
+ * @param {Object} userData typically, user.body (validated by joi)
+ * @returns {Object} A new user object
+ */
 async function createUser(userData) {
   const newUser = await User.create(userData);
 
@@ -108,6 +126,7 @@ async function deleteUserById(id) {
 
 module.exports = {
   authenticateUser,
+  userSignup,
   getUserByEmailWithPassword,
   getAllUsers,
   createUser,
