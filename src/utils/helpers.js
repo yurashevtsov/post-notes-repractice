@@ -18,7 +18,7 @@ function keepAllowedFields(unfilteredObj, allowedFields) {
 }
 /**
  * @param {Object} unfilteredObj object to delete fields from
- * @param {Array} fields array of fields to be removed 
+ * @param {Array} fields array of fields to be removed
  * @returns {Object}
  */
 function removeFieldsFromObj(unfilteredObj, fields) {
@@ -31,7 +31,18 @@ function removeFieldsFromObj(unfilteredObj, fields) {
   return filtered;
 }
 
+
+// eslint-disable-next-line no-unused-vars
+function convertStringToArrayForJoi(str, joiHelper) {
+  if (str.includes(",")) {
+    return str.split(",").map((el) => el.trim());
+  }
+
+  return [str];
+}
+
 module.exports = {
+  convertStringToArrayForJoi,
   keepAllowedFields,
   removeFieldsFromObj,
 };
