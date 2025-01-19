@@ -1,6 +1,38 @@
 "use strict";
 
 const User = require("@src/user/userModel.js");
+const passwordService = require("@src/auth/passwordService.js");
+const jwtService = require("@src/auth/jwtService.js");
+
+/**
+ * Authenticate user by email and password
+ * @param {string} email user email
+ * @param {string} candidatePassword user password
+ * @returns {string} JWT
+ */
+async function authenticateUser(email, candidatePassword) {
+  //1. get the user details(with password)
+  const foundUser = await getUserByEmailWithPassword(email);
+
+  if (!foundUser) {
+    throw new Error("Invalid credentials.");
+  }
+
+  // 2.make sure passwords matches the password from database
+  const isCorrectPassword = await passwordService.isValidPassword(
+    candidatePassword,
+    foundUser.password
+  );
+
+  // 3. if passwords are not equal then send a vague message - no leaking
+  if (!isCorrectPassword) {
+    throw new Error("Invalid credentials");
+  }
+  // 4.sign token
+  const token = jwtService.encodeToken(foundUser.id);
+
+  return token;
+}
 
 async function getAllUsers() {
   const users = await User.findAll();
@@ -49,7 +81,6 @@ async function updateUser(userId, userData) {
     where: { id: userId },
   });
 
-
   // TODO: add real error handling later
   if (!foundUser) {
     throw new Error(`Not found.`);
@@ -73,6 +104,7 @@ async function deleteUserById(id) {
 }
 
 module.exports = {
+  authenticateUser,
   getUserByEmailWithPassword,
   getAllUsers,
   createUser,

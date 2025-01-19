@@ -3,19 +3,10 @@
 const catchAsync = require("@src/utils/catchAsync.js");
 const userService = require("./userService.js");
 const jwtService = require("@src/auth/jwtService.js");
-const passwordService = require("@src/auth/passwordService.js");
-const helpers = require("@src/utils/helpers.js");
 
 async function signup(req, res) {
-  const filteredUserData = helpers.keepAllowedFields(req.body, [
-    "username",
-    "email",
-    "password",
-    "avatar",
-  ]);
-
-  const newUser = await userService.createUser(filteredUserData);
-
+  // allowed fields: username, email, password, avatar - handled by Joi middleware
+  const newUser = await userService.createUser(req.body);
   const token = jwtService.encodeToken(newUser.id);
 
   // could remove the user but not really necessary in my pet project
@@ -25,28 +16,11 @@ async function signup(req, res) {
   });
 }
 
-async function login(req, res, next) {
-  //1. get the user details(with password)
-  const foundUser = await userService.getUserByEmailWithPassword(
-    req.body.email
+async function login(req, res) {
+  const token = await userService.authenticateUser(
+    req.body.email,
+    req.body.password
   );
-
-  if (!foundUser) {
-    return next("Invalid credentials.");
-  }
-
-  // 2.make sure passwords matches the password from database
-  const isCorrectPassword = await passwordService.isValidPassword(
-    req.body.password,
-    foundUser.password
-  );
-
-  // 3. if passwords are not equal then send a vague message - no leaking
-  if (!isCorrectPassword) {
-    return next("Invalid credentials");
-  }
-  // 4.sign token
-  const token = jwtService.encodeToken(foundUser.id);
 
   res.status(200).send({
     token,
@@ -62,14 +36,7 @@ async function getOneUser(req, res) {
 }
 
 async function createUser(req, res) {
-  const filteredUserData = helpers.keepAllowedFields(req.body, [
-    "username",
-    "email",
-    "password",
-    "avatar",
-  ]);
-
-  res.status(201).send(await userService.createUser(filteredUserData));
+  res.status(201).send(await userService.createUser(req.body));
 }
 
 // changing email is not allowed
@@ -77,16 +44,7 @@ async function updateUser(req, res) {
   const userId = req.params.id;
   const userData = req.body;
 
-  // FILTERING OUT FIELDS THAT WE DONT WANT TO ADD TO A DATABASE
-  // allowedFields: ["username", "password", "avatar"]
-  // why? I dont want other fields to be touched
-  const filteredUserData = helpers.keepAllowedFields(userData, [
-    "username",
-    "password",
-    "avatar",
-  ]);
-
-  res.status(200).send(await userService.updateUser(userId, filteredUserData));
+  res.status(200).send(await userService.updateUser(userId, userData));
 }
 
 async function deleteUser(req, res) {
