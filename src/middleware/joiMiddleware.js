@@ -1,4 +1,5 @@
 "use strict";
+const Joi = require("joi");
 
 module.exports = {
   // joi validates based on schema created from by the library, schema has a function to call to validate passed object as a parameter
@@ -17,6 +18,16 @@ module.exports = {
 
         //   if joi didnt throw an error it will call next as usual
         next();
+      } catch (err) {
+        next(err);
+      }
+    };
+  },
+
+  validateMutateQuery(schema) {
+    return function (req, res, next) {
+      try {
+        req.query = Joi.attempt(req.query, schema);
       } catch (err) {
         next(err);
       }

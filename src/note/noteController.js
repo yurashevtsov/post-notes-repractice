@@ -7,9 +7,9 @@ const helpers = require("@src/utils/helpers");
 // user must be authenticated to use these
 
 async function getAllUserNotes(req, res) {
-  const userId = req.user.id;
-
-  res.status(200).send(await noteService.getAllUserNotes(userId));
+  res
+    .status(200)
+    .send(await noteService.getAllUserNotes(req.user.id, req.query));
 }
 
 async function getUserNote(req, res) {

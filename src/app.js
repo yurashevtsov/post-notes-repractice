@@ -17,4 +17,14 @@ app.all("*", (req, res, next) => {
   res.status(200).send(`${req.originalUrl} is not found on this server`);
 });
 
+// ! ERROR HANDLING IS IMPORTANT !
+// ERROR handler just to have something
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(500).send({
+    message: err.message || "Internal Server Error",
+    error: err,
+  });
+});
+
 module.exports = app;
