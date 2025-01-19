@@ -31,7 +31,10 @@ async function authenticateUser(email, candidatePassword) {
   // 4.sign token
   const token = jwtService.encodeToken(foundUser.id);
 
-  return token;
+  return {
+    user: foundUser,
+    token,
+  };
 }
 
 async function getAllUsers() {
