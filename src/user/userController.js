@@ -26,7 +26,7 @@ async function login(req, res) {
 }
 
 async function getAllUsers(req, res) {
-  res.status(200).send(await userService.getAllUsers());
+  res.status(200).send(await userService.getAllUsers(req.query));
 }
 
 async function getOneUser(req, res) {

@@ -5,6 +5,7 @@ const userController = require("./userController.js");
 const authMiddleware = require("@src/auth/authorization.middleware.js");
 const joiMiddleware = require("@src/middleware/joiMiddleware.js");
 const userValidationSchema = require("@src/user/userValidationSchema.js");
+const noteValidationSchema = require("@src/note/noteValidationSchema.js");
 
 // SIGNUP
 routerInstance.post(
@@ -28,9 +29,12 @@ routerInstance.param(
   joiMiddleware.validateSchema(userValidationSchema.validateIdSchema, "params")
 );
 
-
 // GET ALL USERS
-routerInstance.get("/", userController.getAllUsers);
+routerInstance.get(
+  "/",
+  joiMiddleware.validateMutateQuery(noteValidationSchema.querySchema),
+  userController.getAllUsers
+);
 
 // GET ONE USER
 routerInstance.get("/:id", userController.getOneUser);

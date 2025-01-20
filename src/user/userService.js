@@ -3,6 +3,7 @@
 const User = require("@src/user/userModel.js");
 const passwordService = require("@src/auth/passwordService.js");
 const jwtService = require("@src/auth/jwtService.js");
+const AppFeatures = require("@src/utils/appFeatures.js");
 
 /**
  * Authenticate user by email and password
@@ -51,8 +52,13 @@ async function userSignup(userData) {
   };
 }
 
-async function getAllUsers() {
-  const users = await User.findAll();
+async function getAllUsers(queryObj) {
+  const { databaseQuery } = new AppFeatures({}, queryObj)
+    .sort()
+    .paginate()
+    .limitFields();
+
+  const users = await User.findAll(databaseQuery);
 
   return users;
 }

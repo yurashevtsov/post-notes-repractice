@@ -26,9 +26,15 @@ routerInstance.get(
 routerInstance.get("/:id", noteController.getUserNote);
 
 // CREATE NOTE
-routerInstance.post("/", noteController.createUserNote);
+routerInstance.post("/",
+  joiMiddleware.validateSchema(noteSchema.createNoteSchema),
+  noteController.createUserNote);
 // UPDATE NOTE
-routerInstance.put("/:id", noteController.updateUserNote);
+routerInstance.put(
+  "/:id",
+  joiMiddleware.validateSchema(noteSchema.updateNoteSchema),
+  noteController.updateUserNote
+);
 // DELETE NOTE
 routerInstance.delete("/:id", noteController.deleteUserNote);
 
