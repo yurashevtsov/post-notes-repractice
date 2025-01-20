@@ -8,6 +8,14 @@ const noteSchema = require("@src/note/noteValidationSchema.js");
 
 routerInstance.use(authorizationMiddleware.tokenAuthHandler);
 
+routerInstance.param(
+  "id",
+  joiMiddleware.validateSchema(noteSchema.validateIdSchema, "params")
+);
+
+// ! ADD JOI VALIDATION FOR ALL ROUTES
+// ! USERS ROUTES TOO
+
 // GET ALL NOTES
 routerInstance.get(
   "/",

@@ -3,6 +3,7 @@
 const Joi = require("joi");
 const helpers = require("@src/utils/helpers");
 
+// should I call it features schema...? I need to be a bit more precise as its not the only possible query that might be
 const querySchema = Joi.object({
   // lets just keep it simple - only allowing strings and convert them to an array of strings - for sequelize ->  attributes:["field1", "field2"]
   fields: Joi.string().custom(helpers.convertStringToArrayForJoi).optional(),
@@ -26,7 +27,7 @@ const createUserNoteSchema = Joi.object({
 });
 
 module.exports = {
-  querySchema,
   validateIdSchema,
+  querySchema,
   createUserNoteSchema,
 };

@@ -2,6 +2,10 @@
 
 const Joi = require("joi");
 
+const validateIdSchema = Joi.object({
+  id: Joi.number().required(),
+});
+
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
@@ -24,6 +28,7 @@ const updateUserSchema = Joi.object({
 }).with("password", "repeatPassword");
 
 module.exports = {
+  validateIdSchema,
   loginSchema,
   createUserSchema,
   updateUserSchema,
