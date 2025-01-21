@@ -55,7 +55,7 @@ User.init(
   // options
   {
     sequelize: sequelizeInstance,
-    modelName: "user",
+    modelName: "User",
     tableName: "users",
     timestamps: true, // to enable timestamps it must be set to true
     updatedAt: true, // I want to enable updatedAt timestamp to for JWT verification, if user was updated after JWT was issued

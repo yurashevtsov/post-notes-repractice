@@ -30,7 +30,7 @@ Note.init(
   },
   {
     sequelize: sequelizeInstance,
-    modelName: "note",
+    modelName: "Note",
     tableName: "notes",
     timestamps: true,
     createdAt: true,
