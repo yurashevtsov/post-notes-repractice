@@ -9,7 +9,7 @@ const passwordService = require("@src/auth/passwordService.js");
 class User extends Model {
   toJSON() {
     const attributes = this.get();
-    delete attributes.password;
+    Reflect.deleteProperty(attributes, "password");
     return attributes;
   }
 }

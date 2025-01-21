@@ -5,6 +5,8 @@ const AppFeatures = require("@src/utils/appFeatures");
 
 /* 
   accepts - fields: id, userId, name, description, color, createdAt, updatedAt
+  query example - api/notes?order=id_desc,name&page=1&limit=2&fields=id,userId,name,description
+  for sort - order=field_direction
 */
 async function getAllUserNotes(userId, queryObj) {
   const initCondition = {
@@ -16,43 +18,15 @@ async function getAllUserNotes(userId, queryObj) {
     .limitFields()
     .paginate();
 
-  const allNotes = await Note.findAll(databaseQuery);
+  const data = await Note.findAndCountAll(databaseQuery);
 
-  return allNotes;
+  return {
+    total: data.count,
+    totalPages: Math.ceil(data.count / databaseQuery.limit),
+    currentPage: databaseQuery.page,
+    data: data.rows,
+  };
 }
-
-// async function getAllUserNotes(userId, queryObj) {
-//   console.log(queryObj);
-
-//   const queryDB = {
-//     where: { userId: userId },
-//     // PAGINATION
-//     page: queryObj.page,
-//     // HOW MANY RESULTS SHOULD BE SHOWN
-//     limit: queryObj.limit,
-//     // Sort order
-//     order: [],
-//     // HOW MANY RECORDS SHOULD BE SKIPPED
-//     offset: (queryObj.page - 1) * queryObj.limit,
-//   };
-
-//   // LIMITING FIELDS
-//   if (queryObj.fields) {
-//     // if I get unknown field, it will throw an error, what if I'll use filter to get only known fields before putting it there?
-//     queryDB.attributes = queryObj.fields;
-//   }
-
-//   // sort order
-//   if (queryObj.order) {
-//     queryObj.order.map((el) => queryDB.order.push(el.split("_")));
-//   }
-
-//   console.log(queryDB);
-
-//   const allNotes = await Note.findAll(queryDB);
-
-//   return allNotes;
-// }
 
 async function getUserNote(userId, noteId) {
   const foundNote = await Note.findOne({

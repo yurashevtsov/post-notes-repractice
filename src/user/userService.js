@@ -53,14 +53,19 @@ async function userSignup(userData) {
 }
 
 async function getAllUsers(queryObj) {
-  const { databaseQuery } = new AppFeatures({}, queryObj)
+    const { databaseQuery } = new AppFeatures({}, queryObj)
     .sort()
     .paginate()
     .limitFields();
 
-  const users = await User.findAll(databaseQuery);
+  const data = await User.findAndCountAll(databaseQuery);
 
-  return users;
+  return {
+    total: data.count,
+    totalPages: Math.ceil(data.count / databaseQuery.limit),
+    currentPage: databaseQuery.page,
+    data: data.rows,
+  };
 }
 
 async function getUserById(id) {
