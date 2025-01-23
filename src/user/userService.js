@@ -4,6 +4,10 @@ const User = require("@src/user/userModel.js");
 const passwordService = require("@src/auth/passwordService.js");
 const jwtService = require("@src/auth/jwtService.js");
 const AppFeatures = require("@src/utils/appFeatures.js");
+const {
+  HttpNotFoundError,
+  HttpBadRequestError,
+} = require("@src/utils/httpErrors");
 
 /**
  * Authenticate user by email and password
@@ -16,7 +20,7 @@ async function authenticateUser(email, candidatePassword) {
   const foundUser = await getUserByEmailWithPassword(email);
 
   if (!foundUser) {
-    throw new Error("Invalid credentials.");
+    throw new HttpBadRequestError("Invalid credentials.");
   }
 
   // 2.make sure passwords matches the password from database
@@ -27,7 +31,7 @@ async function authenticateUser(email, candidatePassword) {
 
   // 3. if passwords are not equal then send a vague message - no leaking
   if (!isCorrectPassword) {
-    throw new Error("Invalid credentials");
+    throw new HttpBadRequestError("Invalid credentials");
   }
   // 4.sign token
   const token = jwtService.encodeToken(foundUser.id);
@@ -53,7 +57,7 @@ async function userSignup(userData) {
 }
 
 async function getAllUsers(queryObj) {
-    const { databaseQuery } = new AppFeatures({}, queryObj)
+  const { databaseQuery } = new AppFeatures({}, queryObj)
     .sort()
     .paginate()
     .limitFields();
@@ -74,7 +78,7 @@ async function getUserById(id) {
   });
 
   if (!user) {
-    throw new Error(`Not found.`);
+    throw new HttpNotFoundError(`User is not found.`);
   }
 
   return user;
@@ -113,9 +117,9 @@ async function updateUser(userId, userData) {
     where: { id: userId },
   });
 
-  // TODO: add real error handling later
+
   if (!foundUser) {
-    throw new Error(`Not found.`);
+    throw new HttpNotFoundError(`User is not found.`);
   }
 
   foundUser.set(userData);

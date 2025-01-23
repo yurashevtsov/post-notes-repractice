@@ -2,6 +2,7 @@
 
 const Note = require("@src/note/noteModel.js");
 const AppFeatures = require("@src/utils/appFeatures");
+const { HttpNotFoundError } = require("@src/utils/httpErrors");
 
 /* 
   accepts - fields: id, userId, name, description, color, createdAt, updatedAt
@@ -37,7 +38,7 @@ async function getUserNote(userId, noteId) {
   });
 
   if (!foundNote) {
-    throw new Error(`Entity you are trying to find doesnt exists.`);
+    throw new HttpNotFoundError(`Note with id ${noteId} is not found.`);
   }
 
   return foundNote;
@@ -61,7 +62,7 @@ async function updateUserNote(userId, noteId, userData) {
   });
 
   if (!foundNote) {
-    throw new Error(`Entity you are trying to update doesnt exists.`);
+    throw new HttpNotFoundError(`Note with id ${noteId} is not found.`);
   }
 
   foundNote.set(userData);
@@ -75,7 +76,7 @@ async function deleteUserNote(userId, noteId) {
   const foundNote = await getUserNote(userId, noteId);
 
   if (!foundNote) {
-    throw new Error(`Entity you are trying to delete doesnt exists.`);
+    throw new HttpNotFoundError(`Note with id ${noteId} is not found.`);
   }
 
   foundNote.destroy();

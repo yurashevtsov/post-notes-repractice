@@ -19,6 +19,7 @@ async function decodeToken(token) {
 }
 
 /**
+ * Checks if User has changed his password after JWT was issued. If he did, then old token is invalid.
  * Compares two numbers, because JWT uses seconds, not milliseconds after date conversion, it will convert first date to seconds and compare them.
  * @param {Date} userChangedPasswordAt normal date object/date in milliseconds
  * @param {number} tokenIssuedAt number, representing date in seconds
@@ -26,8 +27,10 @@ async function decodeToken(token) {
  */
 function userChangedPasswordAfter(userChangedPasswordAt, tokenIssuedAt) {
   if (userChangedPasswordAt && userChangedPasswordAt / 1000 > tokenIssuedAt) {
-    throw new Error("User recently has changed his password. Please login again.");
+    return true;
   }
+
+  return false;
 }
 
 module.exports = {

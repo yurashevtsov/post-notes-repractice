@@ -3,6 +3,10 @@
 const jwtService = require("@src/auth/jwtService.js");
 const userService = require("@src/user/userService.js");
 const catchAsync = require("@src/utils/catchAsync.js");
+const {
+  HttpBadRequestError,
+  HttpUnauthorizedError,
+} = require("@src/utils/httpErrors");
 
 async function tokenAuthHandler(req, res, next) {
   // so, assuming : req.headers.authorization && req.headers.authorization.startsWith("Bearer")
@@ -19,7 +23,7 @@ async function tokenAuthHandler(req, res, next) {
   }
 
   if (!token) {
-    return next("Invalid token or it doesnt exists.");
+    return next(new HttpBadRequestError("Invalid token or it doesnt exists."));
   }
 
   // 2.decode token
@@ -27,18 +31,29 @@ async function tokenAuthHandler(req, res, next) {
 
   // 3. Make sure scope contains - AUTHENTICATION
   if (!payload?.scope.includes("AUTHENTICATION")) {
-    return next("Invalid token. Scope error.");
+    return next(new HttpBadRequestError("Invalid token."));
   }
 
   // 4. Make sure user still exists
   const foundUser = await userService.getUserByIdNoError(payload.sub);
 
   if (!foundUser) {
-    return next("User no longer exists. Invalid token.");
+    return next(new HttpBadRequestError("Invalid token."));
   }
 
   // 5. make sure user didnt change his password after token was issued
-  jwtService.userChangedPasswordAfter(foundUser.changedPasswordAt, payload.iat);
+  const recentlyChangedPassword = jwtService.userChangedPasswordAfter(
+    foundUser.changedPasswordAt,
+    payload.iat
+  );
+
+  if (recentlyChangedPassword) {
+    return next(
+      new HttpUnauthorizedError(
+        "User recently changed his password. Please login again."
+      )
+    );
+  }
 
   // 6. attach user to a request object
   req.user = foundUser;

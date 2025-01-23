@@ -13,9 +13,6 @@ routerInstance.param(
   joiMiddleware.validateSchema(noteSchema.validateIdSchema, "params")
 );
 
-// ! ADD JOI VALIDATION FOR ALL ROUTES
-// ! USERS ROUTES TOO
-
 // GET ALL NOTES
 routerInstance.get(
   "/",

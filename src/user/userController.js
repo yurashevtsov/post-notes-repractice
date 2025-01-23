@@ -26,15 +26,21 @@ async function login(req, res) {
 }
 
 async function getAllUsers(req, res) {
-  res.status(200).send(await userService.getAllUsers(req.query));
+  const query = req.query;
+
+  res.status(200).send(await userService.getAllUsers(query));
 }
 
 async function getOneUser(req, res) {
-  res.status(200).send(await userService.getUserById(req.params.id));
+  const userId = req.params.id;
+
+  res.status(200).send(await userService.getUserById(userId));
 }
 
 async function createUser(req, res) {
-  res.status(201).send(await userService.createUser(req.body));
+  const userId = req.params.id;
+
+  res.status(201).send(await userService.createUser(userId));
 }
 
 // changing email is not allowed
@@ -46,7 +52,9 @@ async function updateUser(req, res) {
 }
 
 async function deleteUser(req, res) {
-  res.status(204).send(await userService.deleteUserById(req.params.id));
+  const userId = req.params.id;
+
+  res.status(204).send(await userService.deleteUserById(userId));
 }
 
 module.exports = {

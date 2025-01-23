@@ -3,8 +3,6 @@
 const catchAsync = require("@src/utils/catchAsync.js");
 const noteService = require("@src/note/noteService.js");
 
-// user must be authenticated to use these
-
 async function getAllUserNotes(req, res) {
   res
     .status(200)
@@ -28,10 +26,11 @@ async function createUserNote(req, res) {
 async function updateUserNote(req, res) {
   const userId = req.user.id;
   const noteId = req.params.id;
+  const userData = req.body;
 
   res
     .status(200)
-    .send(await noteService.updateUserNote(userId, noteId, req.body));
+    .send(await noteService.updateUserNote(userId, noteId, userData));
 }
 
 async function deleteUserNote(req, res) {

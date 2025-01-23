@@ -1,7 +1,5 @@
 "use strict";
 
-const { update } = require("@src/user/userModel");
-
 class AppFeatures {
   constructor(databaseQuery, queryStr) {
     this.databaseQuery = databaseQuery;
@@ -57,71 +55,71 @@ class AppFeatures {
 module.exports = AppFeatures;
 
 
-// ? Possible replacement for getAllSomething routes ?
-/**
- *
- * @param {object} filterObj object like { userId: 2, id:10 }
- * @param {object} queryObj req.query object
- * @param {object} Model sequelize (table) model
- * @returns
- */
-async function getAllEntities(filterObj, queryObj, Model) {
-  const filter = {
-    where: { ...filterObj },
-  };
+// // ? Possible replacement for getAllSomething routes ?
+// /**
+//  *
+//  * @param {object} filterObj object like { userId: 2, id:10 }
+//  * @param {object} queryObj req.query object
+//  * @param {object} Model sequelize (table) model
+//  * @returns
+//  */
+// async function getAllEntities(filterObj, queryObj, Model) {
+//   const filter = {
+//     where: { ...filterObj },
+//   };
 
-  const { databaseQuery } = new AppFeatures(filter, queryObj)
-    .sort()
-    .limitFields()
-    .paginate();
+//   const { databaseQuery } = new AppFeatures(filter, queryObj)
+//     .sort()
+//     .limitFields()
+//     .paginate();
 
-  const allEntities = await Model.findAndCountAll(databaseQuery);
+//   const allEntities = await Model.findAndCountAll(databaseQuery);
 
-  return {
-    total: allEntities.count,
-    totalPages: Math.ceil(allEntities.count / databaseQuery.limit),
-    currentPage: databaseQuery.page,
-    data: allEntities.rows,
-  };
-}
+//   return {
+//     total: allEntities.count,
+//     totalPages: Math.ceil(allEntities.count / databaseQuery.limit),
+//     currentPage: databaseQuery.page,
+//     data: allEntities.rows,
+//   };
+// }
 
-async function getOneEntity(filterObj, queryObj, Model) {
-  const oneEntity = await Model.findOne({
-    where: { ...filterObj },
-  });
+// async function getOneEntity(filterObj, queryObj, Model) {
+//   const oneEntity = await Model.findOne({
+//     where: { ...filterObj },
+//   });
 
-  if (!oneEntity) {
-    throw new Error(`${Model.name} is not found.`);
-  }
+//   if (!oneEntity) {
+//     throw new Error(`${Model.name} is not found.`);
+//   }
 
-  return oneEntity;
-}
+//   return oneEntity;
+// }
 
-async function updateOneEntity(filterObj, updateData, Model) {
-  const entityToUpdate = await Model.findOne({
-    where: { ...filterObj },
-  });
+// async function updateOneEntity(filterObj, updateData, Model) {
+//   const entityToUpdate = await Model.findOne({
+//     where: { ...filterObj },
+//   });
 
-  if (!entityToUpdate) {
-    throw new Error(`${Model.name} is not found.`);
-  }
+//   if (!entityToUpdate) {
+//     throw new Error(`${Model.name} is not found.`);
+//   }
 
-  entityToUpdate.set(updateData);
-  entityToUpdate.save();
+//   entityToUpdate.set(updateData);
+//   entityToUpdate.save();
 
-  return entityToUpdate;
-}
+//   return entityToUpdate;
+// }
 
-async function deleteOneEntity(filterObj, Model) {
-  const entityToDelete = await Model.findOne({
-    where: { ...filterObj },
-  });
+// async function deleteOneEntity(filterObj, Model) {
+//   const entityToDelete = await Model.findOne({
+//     where: { ...filterObj },
+//   });
 
-  if (!entityToDelete) {
-    throw new Error(`${Model.name} is not found.`);
-  }
+//   if (!entityToDelete) {
+//     throw new Error(`${Model.name} is not found.`);
+//   }
 
-  entityToDelete.destroy();
+//   entityToDelete.destroy();
 
-  return null;
-}
+//   return null;
+// }
