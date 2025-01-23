@@ -1,4 +1,5 @@
-const { HttpBaseError } = require("./httpsBaseError.js");
+"use strict";
+const HttpBaseError = require("./httpsBaseError.js");
 
 // 401
 const { HTTP_STATUS_UNAUTHORIZED } = require("http2").constants;

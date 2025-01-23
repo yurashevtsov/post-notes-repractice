@@ -9,5 +9,9 @@ module.exports = class HttpBaseError extends Error {
     if (this.constructor === HttpBaseError) {
       throw new Error("Can't directly instance abstract class HttpBaseError");
     }
+    
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
   }
 };
